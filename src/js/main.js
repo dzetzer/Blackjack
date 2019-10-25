@@ -69,17 +69,18 @@ export default () => {
     hitButton.style.display = "none";
 
     return "Your Hand Was: " + singleDeckGame.getUserHandValue() + "<br/>" +
-          "The Dealers Hand Was: " + singleDeckGame.getDealerHandValue();
+           "The Dealers Hand Was: " + singleDeckGame.getDealerHandValue();
   }
   function displayHand()
   {
     playText.innerHTML = "The Current Ante is: " + singleDeckGame.getAnte() + "<br/>" +
-                        "Your Current Hand is: " + singleDeckGame.getUserHandValue() + "<br/>" +
-                        "The Dealers First Card is: " + singleDeckGame.getDealerCardUp();
-                        singleDeckGame.getDealerHand();
+                         "Your Current Hand is: " + singleDeckGame.getUserHandValue() + "<br/>" +
+                         "The Dealers First Card is: " + singleDeckGame.getDealerCardUp();
+                         singleDeckGame.getDealerHand();
   }
   function checkGame()
   {
+    singleDeckGame.settleDealerHand();
     var dealerNum = singleDeckGame.evaluateDealer();
     var userNum = singleDeckGame.evaluateUser();
     if(userNum > 21) gameLose();
