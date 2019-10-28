@@ -9,12 +9,16 @@
 </head>
 <body>
     <div id="app">
+        <h1 id="txt-player"></h1>
         <p id="txt-game"><p>
+        <from id="frm-name">
+            <input type="text" name="name" id="inp-name"/>
+        </from>
         <button id="btn-play">Play Blackjack</button>
         <form id="frm-wager">
             <input type="range" name="chips" id="inp-wager"/>
             <p id="txt-wager"></p>
-            <button id="btn-submit" type="button">Wager</button>
+            <button id="btn-wager-submit" type="button">Wager</button>
         </form>
 
         <button id="btn-hit">Hit</button>
@@ -22,6 +26,9 @@
         <button id="btn-stand">Stand</button>
 
         <button id="btn-continue">Play Again</button>
+
+        <ul id="txt-history">
+        </ul>
     </div>
     <script src="main.js"></script>
 </body>
