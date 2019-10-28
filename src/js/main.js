@@ -1,5 +1,5 @@
 import blackjack from "blackjack-dealer-logic"
-const { singleDeckGame, Result } = require('blackjack-dealer-logic')
+const Result = blackjack.Result;
 
 export default () => {
   const singleDeckGame = blackjack.singleDeckGame;
