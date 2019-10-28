@@ -1,4 +1,5 @@
 import blackjack from "blackjack-dealer-logic"
+const { singleDeckGame, Result } = require('blackjack-dealer-logic')
 
 export default () => {
   const singleDeckGame = blackjack.singleDeckGame;
@@ -7,19 +8,22 @@ export default () => {
 
   const playButton = document.getElementById("btn-play");
 
-  const wagerInput = document.getElementById("inp-wager");
   const wagerForm = document.getElementById("frm-wager");
+  const wagerInput = document.getElementById("inp-wager");
+  const wagerOutput = document.getElementById("txt-wager");
   const wagerSubmit = document.getElementById("btn-submit");
 
   const doubleButton = document.getElementById("btn-double");
   const standButton = document.getElementById("btn-stand");
   const hitButton = document.getElementById("btn-hit");
 
+  const contButton = document.getElementById("btn-continue");
+
   playButton.onclick = function()
   {
     playButton.style.display = "none";
     wagerForm.style.display = "block";
-    playText.innerHTML = "You Have " + singleDeckGame.getUserChips() + " Chips";
+    setWagerForm();
   }
   wagerSubmit.onclick = function()
   {
@@ -28,10 +32,13 @@ export default () => {
     standButton.style.display = "block";
     hitButton.style.display = "block";
 
-    var wagerNum = wagerInput;
-    singleDeckGame.ante = wagerNum;
+    singleDeckGame.receiveAnte(wagerInput.value);
     singleDeckGame.deal();
     displayHand();
+  }
+  wagerForm.oninput = function()
+  {
+    wagerOutput.innerHTML=wagerInput.value;
   }
   doubleButton.onclick = function() 
   { 
@@ -54,19 +61,36 @@ export default () => {
     displayHand();
     checkGame();
   }
+  contButton.onclick = function()
+  {
+    contButton.style.display = "none";
+    wagerForm.style.display = "block";
+    setWagerForm();
+
+    singleDeckGame.resetAnte();
+    singleDeckGame.resetPlayers();
+  }
   function gameLose()
   {
+    singleDeckGame.resetAnte();
     playText.innerHTML = "You Lost! <br/>" + gameSummary();
   }
   function gameWin()
   {
+    singleDeckGame.pushHand();
     playText.innerHTML = "You Won! <br/>" + gameSummary();
+  }
+  function gamePush()
+  {
+    singleDeckGame.userWin();
+    playText.innerHTML = "Push! <br/>" + gameSummary();
   }
   function gameSummary()
   {
     doubleButton.style.display = "none";
     standButton.style.display = "none";
     hitButton.style.display = "none";
+    contButton.style.display = "block";
 
     return "Your Hand Was: " + singleDeckGame.getUserHandValue() + "<br/>" +
            "The Dealers Hand Was: " + singleDeckGame.getDealerHandValue();
@@ -81,15 +105,25 @@ export default () => {
   function checkGame()
   {
     singleDeckGame.settleDealerHand();
-    var dealerNum = singleDeckGame.evaluateDealer();
-    var userNum = singleDeckGame.evaluateUser();
-    if(userNum > 21) gameLose();
-    if(dealerNum > 21) gameWin();
+    if(singleDeckGame.isUserBust() || !singleDeckGame.isUserPlaying())
+    {
+      switch (singleDeckGame.outcome()) {
+        case Result.LOSS:
+          gameLose();
+          break;
+        case Result.PUSH:
+          gamePush();
+          break;
+        case Result.WIN:
+          gameWin();
+          break;
+        default:
+          break;
+      }
+    }
+  }
+  function setWagerForm()
+  {
+    playText.innerHTML = "You Have " + singleDeckGame.getUserChips() + " Chips";
   }
 }
-
-
-
-
-
-
